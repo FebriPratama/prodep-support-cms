@@ -17,12 +17,14 @@
                     </div>
                 </div>
             </li>            
-            <li class="{{ Request::segment(1) === 'dashboard' ? 'active open' : null }}"><a href="#"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
-            <li class="{{ Request::segment(1) === 'my-profile' ? 'active open' : null }}"><a href="#"><i class="zmdi zmdi-account"></i><span>My Profile</span></a></li>
+            <li class="{{ Request::segment(1) === 'dashboard' ? 'active open' : null }}"><a href="{{ route('cms.dashboard') }}"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
             <li>
                 <a href="#Project" class="menu-toggle"><i class="zmdi zmdi-assignment"></i> <span>Master</span></a>
                 <ul class="ml-menu">
                     <li><a href="{{route('roles.index')}}">Roles</a></li>
+                    <li><a href="{{route('topics.index')}}">Topic</a></li>
+                    <li><a href="{{route('list.index')}}">Problem List</a></li>
+                    <li><a href="{{route('faq.index')}}">FAQ</a></li>
                 </ul>
             </li>
             <li class="{{ Request::segment(1) === 'users' ? 'active open' : null }}"><a href="{{ route('users.index') }}"><i class="zmdi zmdi-account"></i><span>User</span></a></li>

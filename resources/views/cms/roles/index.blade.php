@@ -20,7 +20,7 @@
 
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th width="10%">No</th>
                                 <th>Name</th>
                                 <th>Guard Name</th>
                                 <th width="280px">Action</th>

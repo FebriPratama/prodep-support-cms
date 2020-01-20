@@ -26,7 +26,12 @@ Route::group(['prefix' => 'cms'], function() {
         Route::get('/dashboard', 'CMS\CMSController@index')->name('cms.dashboard');
 
 	    Route::resource('roles','CMS\RoleController');
-	    Route::resource('users','CMS\UserController');
+        Route::resource('users','CMS\UserController');
+        
+	    Route::resource('topics','CMS\ProblemController');
+        Route::resource('list','CMS\ProblemListController');
+        
+	    Route::resource('faq','CMS\FaqController');
 
     });
 

@@ -164,4 +164,9 @@ class User extends BaseModel implements
     {
         return $this->getKeyName();
     }
+    
+    public function threads()
+    {
+        return $this->hasMany('App\Models\API\ThreadApi','id','cs_id');
+    }
 }
