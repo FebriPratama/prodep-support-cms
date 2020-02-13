@@ -21,15 +21,15 @@ class CreateTableTblThreads extends Migration
 
             $table->primary('id');
 
-            $table->string('so_id');
-            $table->string('pl_id');
-            $table->string('cf_id');
+            $table->uuid('so_id');
+            $table->uuid('pl_id');
+            $table->uuid('cf_id');
 
-            $table->string('customer_id');
-            $table->string('cs_id');
+            $table->uuid('customer_id');
+            $table->uuid('cs_id');
 
             $table->string('thread_status');
-            $table->string('thread_reason');
+            $table->string('thread_reason')->nullable();
 
             $table->timestamps();
             // $table->softDeletes();

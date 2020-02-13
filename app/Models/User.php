@@ -169,4 +169,14 @@ class User extends BaseModel implements
     {
         return $this->hasMany('App\Models\API\ThreadApi','id','cs_id');
     }
+
+    /**
+     * The channels the user receives notification broadcasts on.
+     *
+     * @return string
+     */
+    public function receivesBroadcastNotificationsOn()
+    {
+        return 'App.User.' . $this->user_id;
+    }
 }

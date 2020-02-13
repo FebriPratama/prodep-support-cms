@@ -30,7 +30,7 @@ class ComplainFormApi extends RestfulModel
 
     public function thread()
     {
-        return $this->hasOne('App\Models\API\SalesOrderApi','cf_id','id');
+        return $this->hasOne('App\Models\API\ThreadApi','cf_id','id');
     }
 
 }

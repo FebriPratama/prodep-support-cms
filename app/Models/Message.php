@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use App\Uuid;
 
-class Message extends BaseModel{
-    use Uuid;
+class Message extends BaseModel implements HasMedia{
+    use Uuid,HasMediaTrait;
 
     /**
      * @var int Auto increments integer key
@@ -22,11 +24,11 @@ class Message extends BaseModel{
      * @var array
      */
     protected $fillable = [
-        'sender_id', 'type','body'
+        'sender_id', 'type','body','thread_id'
     ];
 
-    protected $hidden = [
-        'id'
+    protected $appends = [
+        'media_url'
     ];
     
     /**
@@ -37,5 +39,17 @@ class Message extends BaseModel{
     protected $casts = [
         'id' => 'string'
     ];
+
+    public function images()
+    {
+        return $this->hasMany('Spatie\MediaLibrary\Models\Media','model_id','id');
+    }
+
+    public function getMediaUrlAttribute()
+    {
+        foreach($this->images as $img){
+            return asset('storage/' . $img->id .'/'. $img->file_name);
+        }
+    }
 
 }

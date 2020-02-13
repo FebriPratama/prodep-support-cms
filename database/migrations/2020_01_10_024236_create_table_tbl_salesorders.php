@@ -18,6 +18,7 @@ class CreateTableTblSalesorders extends Migration
     { 
         Schema::create(static::TABLE_NAME, function (Blueprint $table) {
             $table->uuid('id');
+            $table->primary('id');
             
             $table->string('so_type');
             $table->string('so_product_name');

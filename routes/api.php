@@ -50,14 +50,12 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
                 /*
                  * Authentication
                  */
-                $api->group(['prefix' => 'auth'], function (Router $api) {
-                    $api->group(['prefix' => 'jwt'], function (Router $api) {
-                        $api->get('/refresh', 'App\Http\Controllers\Auth\AuthController@refresh');
-                        $api->delete('/token', 'App\Http\Controllers\Auth\AuthController@logout');
-                    });
-
-                    $api->get('/me', 'App\Http\Controllers\Auth\AuthController@getUser');
+                $api->group(['prefix' => 'jwt'], function (Router $api) {
+                    $api->get('/refresh', 'App\Http\Controllers\Auth\AuthController@refresh');
+                    $api->delete('/token', 'App\Http\Controllers\Auth\AuthController@logout');
                 });
+
+                $api->get('/user', 'App\Http\Controllers\Auth\AuthController@getUser');
 
                 /*
                  * Sales Order
@@ -75,6 +73,32 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
                     $api->get('/{id}', 'App\Http\Controllers\Api\ProblemController@show');
                     $api->get('/{id}/list', 'App\Http\Controllers\Api\ProblemController@showList');
                 });
+
+                /*
+                 * Complain
+                 */
+                $api->group(['prefix' => 'complain'], function (Router $api) {
+                    $api->get('/', 'App\Http\Controllers\Api\ComplainFormController@index');
+                    $api->get('/{id}', 'App\Http\Controllers\Api\ComplainFormController@show');
+                    $api->post('/', 'App\Http\Controllers\Api\ComplainFormController@store');
+                    $api->post('/{id}/changestatus', 'App\Http\Controllers\Api\ComplainFormController@changeStatus');
+                });
+
+                /*
+                 * Message
+                 */
+                $api->group(['prefix' => 'messages'], function (Router $api) {
+                    $api->get('/{id}', 'App\Http\Controllers\Api\MessageController@index');
+                    $api->post('/{id}', 'App\Http\Controllers\Api\MessageController@store');
+                });
+
+                /*
+                 * Thread
+                 */
+                $api->group(['prefix' => 'thread'], function (Router $api) {
+                    $api->get('/', 'App\Http\Controllers\Api\ThreadController@index');
+                });
+                
                 
             });
 

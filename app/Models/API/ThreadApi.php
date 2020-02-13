@@ -3,12 +3,11 @@
 namespace App\Models\API;
 
 use Specialtactics\L5Api\Models\RestfulModel;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Uuid;
 
 class ThreadApi extends RestfulModel
 {
-    use SoftDeletes,Uuid;
+    use Uuid;
     
     protected $table = 'tbl_threads';
 
@@ -30,27 +29,32 @@ class ThreadApi extends RestfulModel
 
     public function salesorder()
     {
-        return $this->hasOne('App\Models\API\SalesOrderApi','so_id','id');
+        return $this->hasOne('App\Models\API\SalesOrderApi','id','so_id');
     }
 
     public function problem()
     {
-        return $this->hasOne('App\Models\API\ProblemListApi','pl_id','id');
+        return $this->hasOne('App\Models\API\ProblemListApi','id','pl_id');
     }
 
     public function form()
     {
-        return $this->hasOne('App\Models\API\ProblemListApi','cf_id','id');
+        return $this->hasOne('App\Models\API\ComplainFormApi','id','cf_id');
     }
 
     public function customer()
     {
-        return $this->hasOne('App\Models\User','customer_id','id');
+        return $this->hasOne('App\Models\User','user_id','customer_id');
     }
 
     public function support()
     {
-        return $this->hasOne('App\Models\User','cs_id','id');
+        return $this->hasOne('App\Models\User','user_id','cs_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany('App\Models\Message','id','thread_id');
     }
 
 }
