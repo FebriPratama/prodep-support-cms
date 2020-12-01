@@ -10,13 +10,10 @@ class UserStorySeeder extends BaseSeeder
 
     public function runFake()
     {
-        DB::table('roles')->truncate();
+        //DB::table('roles')->truncate();
         DB::table('users')->truncate();
 
         $roles = [
-            [
-                'name' => 'Superadmin',
-            ],
             [
                 'name' => 'Admin',
             ],
@@ -25,9 +22,13 @@ class UserStorySeeder extends BaseSeeder
             ]
         ];
 
+        // foreach ($roles as $q) {
+        //     Role::create(['name' => $q['name'],'guard_name' => 'web']);
+        // }
+/*
         foreach ($roles as $q) {
-            Role::create(['name' => $q['name']]);
-        }
+            Role::create(['name' => $q['name'],'guard_name' => 'web']);
+        }*/
 
         $users = [
             [
@@ -47,8 +48,7 @@ class UserStorySeeder extends BaseSeeder
 
             $roles = Role::all();
             foreach($roles as $role){
-
-                $user->assignRole(Role::findByName($role->name));
+                $user->assignRole(Role::findByName($role->name,'web'));
                 break;
             }
         }

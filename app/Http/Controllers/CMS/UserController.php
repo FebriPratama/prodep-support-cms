@@ -10,6 +10,8 @@ use DataTables;
 use Illuminate\Database\DatabaseManager as DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Facebook\Facebook;
 
 class UserController extends Controller
 {
@@ -163,4 +165,181 @@ class UserController extends Controller
         return User::create($input);
     }
 
+    public function ToFbConnect($id)
+    {
+        $user = $this->user->find($id);
+
+        if(is_object($user)){
+
+            session(['UserFB' => $id ]);
+            return redirect()->route('cms.connect.fb');
+
+        }
+
+        return redirect()->route('users.index')
+        ->with('danger', 'Data Not Found');
+    }
+
+    public function RequestToken(Facebook $facebook, Request $request){
+        
+        $value = $request->session()->get('UserFB');
+
+        if(!$request->session()->has('UserFB')){
+
+            return redirect()->route('users.index')
+            ->with('danger', 'Data Not Found');
+
+        }
+
+        $user = $this->user->find($value);
+
+        if(!is_object($user)){
+
+            return redirect()->route('users.index')
+            ->with('success', 'Data Not Found');
+
+        }
+
+        $input = array(                
+            'fb_token' => $user->fb_token,
+            'fb_page_id' => $user->fb_page_id,
+            'ig_page_id' => $user->ig_page_id
+        );
+
+        $loginUrl = "";
+        $pagesArray = [];
+        $igsArray = [];
+        $accessToken = "";
+
+        // helper
+        $helper = $facebook->getRedirectLoginHelper();
+
+        $helper->getPersistentDataHandler()->set('state', $request->input('state'));
+
+        // oauth object
+        $oAuth2Client = $facebook->getOAuth2Client();
+
+        if ( (trim($request->input('code')) != '') 
+                && (trim($user->ig_page_id) == '') ) { // get access token
+
+            try {
+                
+                $accessToken = $helper->getAccessToken();
+                $accessToken = $oAuth2Client->getLongLivedAccessToken( $accessToken );
+                $accessToken = (String) $accessToken;
+
+                $loginUrl = "";
+                $baseUrl = 'https://graph.facebook.com/v9.0/';
+    
+                // get pages endpoint
+                $endpointFormat = $baseUrl . 'me/accounts?access_token={access-token}';
+                $pagesEndpoint = $baseUrl . 'me/accounts';
+    
+                // endpoint params
+                $pagesParams = array(
+                    'access_token' => $accessToken
+                );
+    
+                // add params to endpoint
+                $pagesEndpoint .= '?' . http_build_query( $pagesParams );
+    
+                // setup curl
+                $ch = curl_init();
+                curl_setopt( $ch, CURLOPT_URL, $pagesEndpoint );
+                curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
+                curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+                curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    
+                // make call and get response
+                $response = curl_exec( $ch );
+                curl_close( $ch );
+                $pagesArray = json_decode( $response, true );
+                unset( $pagesArray['data'][0]['access_token'] );
+
+                // get instagram account id endpoint
+                $endpointFormat = $baseUrl . $pagesArray['data'][0]['id'].'?fields=instagram_business_account&access_token={access-token}';
+                $instagramAccountEndpoint = $baseUrl . $pagesArray['data'][0]['id'];
+    
+                // endpoint params
+                $igParams = array(
+                    'fields' => 'instagram_business_account',
+                    'access_token' => $accessToken
+                );
+    
+                // add params to endpoint
+                $instagramAccountEndpoint .= '?' . http_build_query( $igParams );
+    
+                // setup curl
+                $ch = curl_init();
+                curl_setopt( $ch, CURLOPT_URL, $instagramAccountEndpoint );
+                curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
+                curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+                curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    
+                // make call and get response
+                $response = curl_exec( $ch );
+                curl_close( $ch );
+                $igsArray = json_decode( $response, true );
+    
+                // update fb/fb page id
+                $input = array(                
+                    'fb_token' => $accessToken,
+                    'fb_page_id' => $pagesArray['data'][0]['id'],
+                    'ig_page_id' => $igsArray['instagram_business_account']['id']
+                );
+    
+                $user->update($input);
+
+            } catch ( Facebook\Exceptions\FacebookSDKException $e ) {
+
+                return redirect()->route('users.index')
+                ->with('danger', 'Error getting long lived access token ' . $e->getMessage());
+
+            }
+
+        } else { // display login url
+
+            $permissions = ['public_profile', 'instagram_basic', 'pages_show_list', 'instagram_manage_insights', 'instagram_manage_comments'];
+            $loginUrl = $helper->getLoginUrl( route('cms.connect.fb'), $permissions );   
+
+        }     
+            
+        return view('cms.users.instagram', compact('user', 'loginUrl', 'input'));
+
+    }
+
+    public function getPages(){
+
+        $accessToken = "EAAFTxbrFTZB8BAFj6DIbbx37fILbZC3IIgqKbtREjCZCJE14GBPT0zmzdh7ztkYXrJVb9PEl0A54jtCXgwzufb5uXwnaZCJZCrhwSTB2lWD5buLfZCsZCLKYMw1OZCZBUmEGGTDnbLbJDg8iYKMrbH5WM33a9Oze2krXs1yhZA7C4pfAZDZD";
+
+        $baseUrl = 'https://graph.facebook.com/v9.0/';
+
+        // get pages endpoint
+        $endpointFormat = $baseUrl . 'me/accounts?access_token={access-token}';
+        $pagesEndpoint = $baseUrl . 'me/accounts';
+
+        Log::info($accessToken);
+
+        // endpoint params
+        $pagesParams = array(
+            'access_token' => $accessToken
+        );
+
+        // add params to endpoint
+        $pagesEndpoint .= '?' . http_build_query( $pagesParams );
+
+        // setup curl
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_URL, $pagesEndpoint );
+        curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
+        curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+
+        // make call and get response
+        $response = curl_exec( $ch );
+        curl_close( $ch );
+        $pagesArray = json_decode( $response, true );
+
+        echo $pagesArray['data'][0]['id'];
+    }
 }

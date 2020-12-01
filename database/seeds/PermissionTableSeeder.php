@@ -51,6 +51,14 @@ class PermissionTableSeeder extends BaseSeeder
             }
         }
 
+        $roles = Role::where('guard_name','api')->get();
+        foreach($roles as $role){
+          $role->syncPermissions($ids);
+        }
+
+
+        $ids = [];
+
         foreach ($permissions as $permission) {
             $p = Permission::create(['guard_name' => 'web','name' => $permission]);
             if(is_object($p)){
@@ -58,7 +66,7 @@ class PermissionTableSeeder extends BaseSeeder
             }
         }
 
-        $roles = Role::all();
+        $roles = Role::where('guard_name','web')->get();;
         foreach($roles as $role){
           $role->syncPermissions($ids);
         }

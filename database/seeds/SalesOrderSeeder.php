@@ -15,7 +15,7 @@ class SalesOrderSeeder extends BaseSeeder
             'so_type' => 'plaza',
             'so_product_name' => 'Mesin Cuci Portable',
             'so_total' => 300000.00,
-            'user_id' => '745dbd21-467f-4f98-8428-2b4dfd726532',
+            'user_id' => '2583164c-edcc-45d9-8391-51c76b767258',
             'so_status' => 'succeeded'
         ]);
 
@@ -23,7 +23,7 @@ class SalesOrderSeeder extends BaseSeeder
             'so_type' => 'store',
             'so_product_name' => 'Stella Pengharum Pikiran',
             'so_total' => 30000.00,
-            'user_id' => '745dbd21-467f-4f98-8428-2b4dfd726532',
+            'user_id' => '2583164c-edcc-45d9-8391-51c76b767258',
             'so_status' => 'succeeded'
         ]);
 
@@ -31,7 +31,7 @@ class SalesOrderSeeder extends BaseSeeder
             'so_type' => 'virtual',
             'so_product_name' => 'Spotify 3 Bulan',
             'so_total' => 50000.00,
-            'user_id' => '745dbd21-467f-4f98-8428-2b4dfd726532',
+            'user_id' => '2583164c-edcc-45d9-8391-51c76b767258',
             'so_status' => 'Diterima & selesai'
         ]);
 

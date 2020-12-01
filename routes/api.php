@@ -85,6 +85,17 @@ $api->version('v1', ['middleware' => ['api']], function (Router $api) {
                 });
 
                 /*
+                 * Instagram
+                 */
+                $api->group(['prefix' => 'instagram'], function (Router $api) {
+                    $api->get('/', 'App\Http\Controllers\Api\InstagramController@index');
+                    $api->get('/{id}', 'App\Http\Controllers\Api\InstagramController@singleMedia');
+                    $api->get('/{id}/comments', 'App\Http\Controllers\Api\InstagramController@mediaComment');
+                    $api->get('/{id}/replies', 'App\Http\Controllers\Api\InstagramController@getReplies');
+                    $api->post('/{id}/replies', 'App\Http\Controllers\Api\InstagramController@storeReply');
+                });
+
+                /*
                  * Message
                  */
                 $api->group(['prefix' => 'messages'], function (Router $api) {

@@ -32,7 +32,7 @@ class User extends BaseModel implements
     public $primaryKey = 'user_id';
     protected $keyType = "string";
     public $incrementing = false;
-    protected $guard_name = 'web';
+    public static $guard_name = 'web';
     
     /**
      * The attributes that should be cast to native types.
@@ -49,7 +49,7 @@ class User extends BaseModel implements
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','fb_token','fb_page_id','ig_page_id'
     ];
 
     /**

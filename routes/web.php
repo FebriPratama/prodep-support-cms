@@ -33,6 +33,19 @@ Route::group(['prefix' => 'cms'], function() {
         
 	    Route::resource('faq','CMS\FaqController');
 
+        Route::group(['prefix' => 'users'], function() {
+
+            Route::get('/facebook/{id}', 'CMS\UserController@ToFbConnect')->name('cms.users.fb');
+    
+        });
+
+        Route::group(['prefix' => 'connect'], function() {
+
+            Route::get('/facebook', 'CMS\UserController@RequestToken')->name('cms.connect.fb');
+            Route::get('/pages', 'CMS\UserController@getPages')->name('cms.connect.pages');
+    
+        });
+
     });
 
 });

@@ -2,13 +2,13 @@
 <aside id="leftsidebar" class="sidebar">
     <div class="navbar-brand">
         <button class="btn-menu ls-toggle-btn" type="button"><i class="zmdi zmdi-menu"></i></button>
-        <a href="{{route('cms.dashboard')}}"><img src="../assets/images/logo.svg" width="25" alt="Aero"><span class="m-l-10">Aero</span></a>
+        <a href="{{route('cms.dashboard')}}"><img src="{{ asset('/assets/images/logo.svg') }}" width="25" alt="Aero"><span class="m-l-10">CMS Klik</span></a>
     </div>
     <div class="menu">
         <ul class="list">
             <li>
                 <div class="user-info">
-                    <div class="image"><a href="#"><img src="../assets/images/profile_av.jpg" alt="User"></a></div>
+                    <div class="image"><a href="#"><img src="{{ asset('/assets/images/profile_av.jpg') }}" alt="User"></a></div>
                     <div class="detail">
                         <h4>{{ Auth::user()->name }}</h4>
                         @foreach(Auth::user()->roles->pluck('name') as $name)
